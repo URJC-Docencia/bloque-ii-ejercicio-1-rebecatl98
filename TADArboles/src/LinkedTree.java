@@ -19,7 +19,7 @@ public class LinkedTree<E> implements NAryTree<E> {
      * @param <T> the type of element stored in the node
      */
     private class TreeNode<T> implements Position<T> {
-
+        //esto es codigo nuevo
         private List<TreeNode<T>> children;
         private T element;
         TreeNode<T> parent;
