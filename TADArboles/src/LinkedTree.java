@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @param <E> the type of element stored in the tree
  */
-public class LinkedTree<E> implements NAryTree<E> {
+public class LinkedTree<E> extends DrawableTree<E> {
 
     /**
      * This class represents a node in a tree data structure.
@@ -63,15 +63,8 @@ public class LinkedTree<E> implements NAryTree<E> {
         return root;
     }
 
-    /**
-     * Checks if the given tree is of type LinkedTree.
-     *
-     * @return The LinkedTree instance if the tree is of type LinkedTree.
-     * @throws RuntimeException If the tree is not a valid LinkedTree instance.
-     */
-
-    private TreeNode<E> checkPosition(Position<E> p){
-        if(!(p instanceof TreeNode)) {
+    private TreeNode<E> checkPosition(Position<E> p) {
+        if (!(p instanceof TreeNode)) {
             throw new RuntimeException("La posición es inválida");
         }
         return (TreeNode<E>) p;
@@ -86,14 +79,6 @@ public class LinkedTree<E> implements NAryTree<E> {
         return newNode;
     }
 
-    /**
-     * Checks if the given tree is of type LinkedTree.
-     *
-     * @param t The tree to be checked.
-     * @return The LinkedTree instance if the tree is of type LinkedTree.
-     * @throws RuntimeException If the tree is not a valid LinkedTree instance.
-     */
-
     private static <E> void checkPositionOfChildrenList(int n, LinkedTree<E>.TreeNode<E> parent) {
         if (n < 0 || n > parent.getChildren().size()) {
             throw new RuntimeException("The position is invalid");
@@ -103,19 +88,19 @@ public class LinkedTree<E> implements NAryTree<E> {
     @Override
     public Position<E> add(E element, Position<E> p, int n) {
         TreeNode<E> parent = checkPosition(p);
-        TreeNode<E> newNode = new TreeNode<>(element, parent);
         checkPositionOfChildrenList(n, parent);
+
+        TreeNode<E> newNode = new TreeNode<>(element, parent);
         parent.getChildren().add(newNode);
         size++;
         return newNode;
     }
 
-
     @Override
     public void swapElements(Position<E> p1, Position<E> p2) {
         TreeNode<E> node1 = checkPosition(p1);
         TreeNode<E> node2 = checkPosition(p2);
-        E aux= node1.getElement();
+        E aux = node1.getElement();
         node1.element = node2.getElement();
         node2.element = aux;
     }
@@ -139,10 +124,10 @@ public class LinkedTree<E> implements NAryTree<E> {
     @Override
     public void remove(Position<E> p) {
         TreeNode<E> node = checkPosition(p);
-        if (node==root){
-            root=null;
+        if (node == root) {
+            root = null;
             size = 0;
-        }else{
+        } else {
             TreeNode<E> parent = node.getParent();
             parent.getChildren().remove(node);
             size -= computeSize(node);
@@ -160,22 +145,12 @@ public class LinkedTree<E> implements NAryTree<E> {
 
     @Override
     public void attach(Position<E> p, NAryTree<E> t) {
-        TreeNode<E> node = checkPosition(p);
-        LinkedTree<E> tree = checkTree(t);
-        node.getChildren().addAll(tree.root.getChildren());
-        size += tree.size;
-
-    }
-
-    private LinkedTree<E> checkTree (NAryTree<E> t){
-        if(!(t instanceof LinkedTree))
-            throw new RuntimeException("El árbol introducido no es válido");
-        return (LinkedTree<E>) t;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public boolean isEmpty() {
-        return root==null;
+        return size == 0;
     }
 
     @Override
@@ -215,38 +190,16 @@ public class LinkedTree<E> implements NAryTree<E> {
 
     @Override
     public Iterator<Position<E>> iterator() {
-        if (isEmpty()){
-            return new ArrayList<Position<E>>().iterator();
-            }
         List<Position<E>> positions = new ArrayList<>();
         breadthOrder(root, positions);
         return positions.iterator();
     }
 
-    public Iterator<Position<E>> iteratorPreOrder() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }/*
-        if(isEmpty())
-            return new ArrayList<Position<E>>().iterator();
-        List<Position<E>> positions = new ArrayList<>();
-        preOrderTransversal(root, positions);
-        return positions.iterator();
-    }*/
-
-    private void preOrderTransversal (TreeNode<E> node, List<Position<E>> positions){
-        if(node != null){
-            positions.add(node);
-            for (TreeNode<E> child: node.getChildren()){
-                preOrderTransversal( child, positions);
-            }
-        }
-    }
-
-    private void breadthOrder (TreeNode<E> node, List<Position<E>> positions){
-        if (node != null){
+    private void breadthOrder(TreeNode<E> node, List<Position<E>> positions) {
+        if (node != null) {
             List<TreeNode<E>> queue = new ArrayList<>();
             queue.add(node);
-            while(!queue.isEmpty()){
+            while (!queue.isEmpty()) {
                 TreeNode<E> toExplore = queue.remove(0);
                 positions.add(toExplore);
                 queue.addAll(node.getChildren());
